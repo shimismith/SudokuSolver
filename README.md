@@ -18,4 +18,4 @@ KMeans is then used in the rho-theta space with 20 clusters. The resultant clust
 ![](examples/hough_kmeans.jpg)
 
 # Next Steps
-The next steps include, solving for the intersection points and extracting the digits, using a neural net training on MNIST to recognize the digits and lastly implementing GAC to solve the sudoku puzzle as a CSP.
+The next steps include, solving for the intersection points and extracting the digits, using a neural net trained on MNIST to recognize the digits and lastly implementing GAC to solve the sudoku puzzle as a CSP.
