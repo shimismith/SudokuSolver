@@ -25,6 +25,24 @@ def kmeans_cluster(lines):
     return sorted_lines
 
 
+def intersections(lines):
+    '''
+    This function solves a system of linear equations for each intersection.
+    x*cos(θ_1) + y*sin(θ_1) = r1
+    x*cos(θ_2) + y*sin(θ_2) = r2
+    '''
+
+    augmented = np.array([np.cos(lines[:, 1]), np.sin(lines[:, 1]), lines[:, 0]]).T  # the augmented matrix representing the system
+
+    i = np.arange(20)
+    indices = np.array(np.meshgrid(i[:10],i[10:])).reshape(2,100).T
+    augmented = augmented[indices]
+
+    return np.linalg.solve(augmented[:, :, 0:2], augmented[:, :, 2])
+
+
+
+
 def for_cropped(img, img_bw):
     edges = cv2.Canny(img_bw, 0, 0)
 
@@ -35,24 +53,12 @@ def for_cropped(img, img_bw):
 
     lines = kmeans_cluster(lines)
 
-    for i in range(0, lines.shape[0]):
-        line = lines[i]
+    points = intersections(lines)
+    print(points.shape)
 
-        rho, theta = line
-        a = np.cos(theta)
-        b = np.sin(theta)
-        x0 = a*rho
-        y0 = b*rho
-        x1 = int(x0 + 1000*(-b))
-        y1 = int(y0 + 1000*(a))
-        x2 = int(x0 - 1000*(-b))
-        y2 = int(y0 - 1000*(a))
-
-        if i < 10:
-            cv2.line(img,(x1,y1),(x2,y2),(0,0,255),2)
-        else:
-            cv2.line(img,(x1,y1),(x2,y2),(0,255,0),2)
-
+    for i in range(0, points.shape[0]):
+        point = points[i]
+        cv2.circle(img, (point[0], point[1]), 5, (0, 0, 255), thickness=-1)
 
     cv2.imwrite('hough.jpg', img)
 
